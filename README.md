@@ -78,9 +78,147 @@ netlist is look like this.
 ![mm flat netlist](https://user-images.githubusercontent.com/104482957/165812641-f64a3deb-6b73-4b0d-be0e-b262650b6195.png)
 hierarchies are flattened out from here.
 
+For synthesization of submodule we read the library first.
 
+"read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
 
+read the design usiing command "read_verilog multiple_modules.v"
 
+sythesize the submodule using command "synth -top sub_module1"
 
+we get result like this. It just infer submodule1 from the multiple modules.
 
+![synth submodule1](https://user-images.githubusercontent.com/104482957/165882697-ab453bac-08e2-478d-aec3-b74d083cce06.png)
 
+link the design using "abc -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+
+![abc submodule1](https://user-images.githubusercontent.com/104482957/165883434-be691784-0530-4b6b-b570-0e8fd7a58b24.png)
+
+find the result of submodule1 only.use command "show"
+
+![show submodule1](https://user-images.githubusercontent.com/104482957/165883596-239568dd-69ff-4b5f-b87f-13c7f815eee8.png)
+
+When we have multiple instance of same module or we have massive design, then the tool is not working properly.so we can give the some small portions one by one to getting the good netlist.so we can do this using synth -top <module name> to control the required module synthesize.
+      
+Part-3: Various Flop Coding Style And Optimization
+      
+ Subpart-1.1: Why Flops and Flop coding styles  
+      
+ A glitch is any unwanted pulse at the output of a combinational gate. A glitch happens generally, if the delays to the combinational gate output are not balanced.To avoid the glitch, put a flip flop after the output of combinational logic because we want to store that element.so we use flop. 
+      
+ Subpart-1.2: Why Flops and Flop coding styles 
+      
+D flip-flops can have asynchronous reset, which can be independent of the clock. Regardless of the clock, the reset can change the output Q to zero, which can cause asynchronous output.In asynchronous reset the Flip Flop does not wait for the clock and sets the output right at the edge of the reset.The Asynchronous implementation is fast, as it does not has to wait for the clock signal to be applied.
+      
+Synchronous resets are based on the premise that the reset signal will only affect or reset the state of the flip-flop on the active edge of a clock. The reset can be applied to the flip-flop as part of the combinational logic generating the d-input to the flip-flop.The coding style to model the reset should be an if/else priority style with the reset in the if condition and all other combinational logic in the else section.      
+
+![async sync reset](https://user-images.githubusercontent.com/104482957/165895354-e30318fd-ac05-4052-acef-8e72b78d1cd0.png)
+
+ Subpart-2.1: flop synthesis simulations
+      
+ For simulation use "iverilog dff_asyncres.v tb_dff_asyncres.v" command.
+      
+"./a.out" to execute this file. it will dump into vcd file.
+      
+![asyncres](https://user-images.githubusercontent.com/104482957/165898757-68fca8c7-8df4-42ef-bb52-72c006f01678.png)
+  
+use "gtkwave tb_dff_asyncres.vcd" for waveforms.
+      
+![asyncres wave](https://user-images.githubusercontent.com/104482957/165900373-de333f9f-263d-4da7-95ea-38beb36bdd29.png)
+      
+for asynchronous set simulation use "iverilog dff_async_set.v tb_dff_async_set.v" command.      
+
+"./a.out" to execute this file. it will dump into vcd file.
+
+![async set](https://user-images.githubusercontent.com/104482957/165933965-3cf0f306-ded2-4051-aa9f-8fd092ef2690.png)
+ 
+use "gtkwave tb_dff_async_set.vcd" for waveforms.      
+      
+![async set wave](https://user-images.githubusercontent.com/104482957/165935849-e23c4446-4f1e-4595-b5f4-c2ae7c0cc346.png)
+
+for synchronous reset "iverilog dff_syncres.v tb_dff_syncres.v" command.
+      
+"./a.out" to execute this file. it will dump into vcd file.      
+
+use "gtkwave tb_dff_syncres.vcd" for waveforms.
+      
+![syncres wave](https://user-images.githubusercontent.com/104482957/165938481-1ef1bd95-9949-4fe3-b195-009955061265.png)
+      
+Subpart-2.2: flop synthesis simulations 
+      
+For synthesization "read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+
+read the design using command "read_verilog dff_asyncres.v"
+
+sythesize the asynchronous reset using command "synth -top dff_asyncres"
+      
+![async synth](https://user-images.githubusercontent.com/104482957/165943160-585fbb36-2142-43f0-a421-77c1fe5c4aa9.png)
+
+link the design using "abc -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+
+![abc asyncres](https://user-images.githubusercontent.com/104482957/165947301-8f308da8-8786-438a-b893-50b3d212db45.png)
+      
+ use command "show"
+      
+![show asyncres](https://user-images.githubusercontent.com/104482957/165947689-6b2c8a33-7d0d-4280-803c-95f7523b9a37.png)
+      
+for the synthesization asynchronous set.     
+read the design using command "read_verilog dff_async_set.v"
+
+sythesize the asynchronous set using command "synth -top dff_async_set"
+      
+![async set synth](https://user-images.githubusercontent.com/104482957/165949175-d882f201-0cd4-4012-a06b-ea43d42a9d42.png)
+      
+To see only dff files "dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"  
+ 
+link the design using "abc -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+      
+use command "show"
+      
+![async sets show](https://user-images.githubusercontent.com/104482957/165951528-424c14e9-c96f-43d5-afad-a41fa4796514.png)
+      
+for the synthesization synchronous reset.     
+read the design using command "read_verilog dff_syncres.v"
+
+sythesize the synchronous reset using command "synth -top dff_syncres"  
+      
+![syncres synth](https://user-images.githubusercontent.com/104482957/165952783-5003c771-b6fa-48fd-befd-db9a626fe2fc.png)
+
+To see only dff files "dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"  
+ 
+link the design using "abc -liberty ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+      
+use command "show"
+      
+![sync res show](https://user-images.githubusercontent.com/104482957/165955569-37dee941-dab7-4928-86c7-053281e6e4cf.png)
+      
+Subpart-3.1: Interesting optimisations 
+      
+for the synthesization mult2  "read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+      
+read the design using command "read_verilog mult_2.v"
+
+sythesize the mul2 using command "synth -top mul2"
+      
+![synth mul2](https://user-images.githubusercontent.com/104482957/165958984-bc8cfca4-bbd3-4861-accd-221acaa57313.png)
+      
+No cells are present so no need to do abc command
+      
+use command "show"
+      
+![mul2 show](https://user-images.githubusercontent.com/104482957/165959511-a73480c4-3e08-4a59-8285-e35566e7d4b7.png)
+
+Subpart-3.2: Interesting optimisations 
+      
+to write the netlist using command "write_verilog -noattr mul2_net.v" 
+      
+"!gvim mu2_net.v"
+      
+![gvim mul2](https://user-images.githubusercontent.com/104482957/165963250-e96da5f8-3f75-4056-bad1-b7013940dd3a.png)
+
+for the synthesization mult  "read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_tt_025C_1v80.lib"
+      
+read the design using command "read_verilog mult_8.v"
+
+sythesize the mul8 using command "synth -top mul8"     
+      
