@@ -202,7 +202,7 @@ sythesize the mul2 using command "synth -top mul2"
       
 ![synth mul2](https://user-images.githubusercontent.com/104482957/165958984-bc8cfca4-bbd3-4861-accd-221acaa57313.png)
       
-No cells are present so no need to do abc command
+Cells are not present so no need to mapping.
       
 use command "show"
       
@@ -221,4 +221,26 @@ for the synthesization mult  "read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_tt
 read the design using command "read_verilog mult_8.v"
 
 sythesize the mul8 using command "synth -top mul8"     
+      
+![synth mult8](https://user-images.githubusercontent.com/104482957/166088746-435755c8-18f8-4943-9f22-b7c96a514905.png)
+      
+Cells are not present so no need to mapping.
+      
+use command "show"
+      
+![show mul8](https://user-images.githubusercontent.com/104482957/166088927-b9652f7f-03ae-4a1b-a455-c4a5eefb0c99.png)
+
+To write the netlist using command "write_verilog -noattr mult8_net.v" 
+      
+"!gvim mut8_net.v" to see the netlist.
+      
+![mult8 netlist](https://user-images.githubusercontent.com/104482957/166089120-0edd3a74-f614-4f62-91ad-4395c178c501.png)
+      
+ Day - 3: combinational and sequential Optimization
+      
+ Part-1: Introduction to Optimization
+      
+      
+      
+      
       
