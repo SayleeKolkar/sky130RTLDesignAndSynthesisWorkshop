@@ -239,7 +239,43 @@ To write the netlist using command "write_verilog -noattr mult8_net.v"
  Day - 3: combinational and sequential Optimization
       
  Part-1: Introduction to Optimization
+    
+ There are two types of optimization 1. combinational logic 2. sequentional logic
       
+ 1.combinational logic optimization: squeezing the logic to get optimised design.it is depend on area and power.
+      
+ Techniques used for optimization :- 1.constant prapogation(direct optimization)  2.Boolian logic optimization
+      
+ 2.sequentional logic Optimization: 1.Basic(1.1. Sequential constant prapogation) 2.Advanced(State opt., retiming,Sequential logic cloning) 
+      
+State optimizaion-optimizing the new state.Cloning is done at the time of physical aware synthesis. Retiming is a technique that consists of moving flip-flops
+and latches across logic for the purpose of improving timing, and so increasing clock frequency. Constant propagation eliminates cases in which values are copied from one location or variable to another.the optimization of a complex boolean expression is a process of finding a simpler one.   
+      
+ Part-2: Combinational logic optimization:
+      
+Synthesize the Opt_check.
+      
+![opt_check synth](https://user-images.githubusercontent.com/104482957/166135124-a4d1df3e-5935-4ab5-bd83-f67a7013a9aa.png)
+      
+"opt_clean -purge" command use for remove unused cells and wire.
+      
+![optcheck show](https://user-images.githubusercontent.com/104482957/166135298-33009ad7-3138-456a-8efa-ca887358e46c.png)
+     
+Opt_check2:
+
+![optcheck2](https://user-images.githubusercontent.com/104482957/166135438-0c3b9748-8317-4bfc-bff3-64b64f1b0b82.png)
+      
+Opt_check3:
+      
+![Opt_check3](https://user-images.githubusercontent.com/104482957/166135636-a4f4c862-8a50-4818-906f-79d2d8e5867e.png)
+      
+Opt_check4:
+
+![optcheck4 synth](https://user-images.githubusercontent.com/104482957/166135734-6554c67f-e81c-45a4-8d23-636ae94b8624.png)
+
+![optcheck4](https://user-images.githubusercontent.com/104482957/166135771-5feccd49-5633-4e88-84df-340ca6188c4e.png)
+      
+Multiple module opt:
       
       
       
